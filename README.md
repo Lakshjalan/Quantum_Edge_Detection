@@ -1,84 +1,174 @@
 <div align="center">
- 
- ![Quantum_Edge_Detection](assets/images/Logo.png)
- 
- ![Python](https://img.shields.io/badge/Python-3670A0?logo=python&logoColor=ffdd54)
- ![Qiskit](https://img.shields.io/badge/Qiskit-%236929C4.svg?logo=Qiskit&logoColor=white)
- ![Last Commit](https://img.shields.io/github/last-commit/mohammadyehya/Quantum_Edge_Detection)
- ![Issues](https://img.shields.io/github/issues/mohammadyehya/Quantum_Edge_Detection)
- ![Contributors](https://img.shields.io/github/contributors/mohammadyehya/Quantum_Edge_Detection)
- ![Stars](https://img.shields.io/github/stars/mohammadyehya/Quantum_Edge_Detection)
- 
+
+![Quantum_Edge_Detection](assets/images/Logo.png)
+
+![Python](https://img.shields.io/badge/Python-3670A0?logo=python&logoColor=ffdd54)
+![Qiskit](https://img.shields.io/badge/Qiskit-%236929C4.svg?logo=Qiskit&logoColor=white)
+![Last Commit](https://img.shields.io/github/last-commit/AJAX-ed/Quantum_Edge_Detection)
+![Issues](https://img.shields.io/github/issues/AJAX-ed/Quantum_Edge_Detection)
+![Contributors](https://img.shields.io/github/contributors/AJAX-ed/Quantum_Edge_Detection)
+![Stars](https://img.shields.io/github/stars/AJAX-ed/Quantum_Edge_Detection)
+
 </div>
 
 ---
-Quantum Edge Detection using different Quantum Encoding strategies which include Flexible Representation of Quantum Images (FRQI), Novel Enhanced Quantum Representation (NEQR) and Quantum Probabilty Image Encoding (QPIE) along with a modified Quantum Hadamard Edge Detection (QHED) Algorithm. It is also my 7th semester project for the course CS4084 Quantum Computing.
 
-## Table of Contents
+# Quantum Edge Detection
 
-- [Installation](#installation)
-- [Usage](#usage)
-- [Features](#features)
-- [Credits](#credits)
+Quantum Edge Detection using three different Quantum Image Encoding strategies:
 
-## Installation
+| Encoding | Description |
+|---|---|
+| **FRQI** | Flexible Representation of Quantum Images |
+| **NEQR** | Novel Enhanced Quantum Representation |
+| **QPIE** | Quantum Probability Image Encoding |
 
-1. Clone the repository:
-```bash
- git clone https://github.com/mohammadyehya/Quantum_Edge_Detection.git
+All three encoders feed into a modified **Quantum Hadamard Edge Detection (QHED)** algorithm to extract edges from images on a quantum circuit simulator.
+
+This is the 7th semester project for **CS4084 – Quantum Computing** at university.
+
+---
+
+## Project Structure
+
+```
+Quantum_Edge_Detection/
+├── run.py                         # ONE-CLICK launcher (auto-installs deps + runs project)
+├── main.py                        # Main demo script (QPIE + FRQI encoding + edge detection)
+├── utils.py                       # Helper: showdiff() for side-by-side image comparison
+├── requirements.txt               # Python dependencies
+├── quantumimageencoding/
+│   ├── __init__.py                # Package marker
+│   ├── BaseQuantumEncoder.py      # Abstract base class for all encoders
+│   ├── FRQI.py                    # FRQI encoder + QHED edge detection
+│   └── QPIE.py                    # QPIE encoder + QHED edge detection
+├── assets/images/                 # Logo and sample images
+├── documentation/                 # Project documentation
+└── Quantum_Edge_Detection.ipynb   # Jupyter Notebook version (recommended for exploration)
 ```
 
-2. If using python version then first setup and activate your virtual environment
+---
+
+## Quick Start — One Click
+
+> **The easiest way to run the project on any machine (fresh or existing):**
+
 ```bash
- python -m venv venv
- venv\Scripts\activate.bat
+python run.py
 ```
-3. Install dependencies:
+
+`run.py` will:
+1. Upgrade `pip` automatically
+2. Check every required library and install any that are missing
+3. Verify Qiskit API compatibility
+4. Launch `main.py`
+
+You **only need Python 3.8+** installed. Everything else is handled automatically.
+
+---
+
+## Manual Setup
+
+If you prefer to set things up yourself:
+
 ```bash
- pip install -r requirements.txt
- ```
+# 1. Clone the repo
+git clone https://github.com/AJAX-ed/Quantum_Edge_Detection.git
+cd Quantum_Edge_Detection
 
-## Usage
-1. If using notebook version then run cells as is. (Recommended)
-2. For python version, the code is written in `main.py`, and simply run `python main.py` to execute the file. (Not recommended as there are some bugs for this version)
+# 2. (Optional) Create a virtual environment
+python -m venv venv
+source venv/bin/activate          # Linux / macOS
+venv\Scripts\activate             # Windows
 
-## Features
+# 3. Install dependencies
+pip install -r requirements.txt
 
-The main features of the project are the encoding strategies. There are 3 functional classes, the BaseEncoding class, QPIE class, & FRQI class. 
+# 4. Run the project
+python main.py
+```
 
-The QPIE class has the encode function which takes an image and encodes it onto a Quantum circuit as shown below.
+---
 
-![](assets/images/QPIE.png)
+## Dependencies
 
-The FRQI class also has the encode function but is more complicated and requires a chain of CRy gates for each pixel as shown below.
+| Package | Purpose |
+|---|---|
+| `qiskit >= 1.0.0` | Quantum circuit construction |
+| `qiskit-aer >= 0.14.0` | Statevector simulator backend |
+| `numpy` | Array maths |
+| `matplotlib` | Circuit diagrams + image plots |
+| `Pillow` | Image loading and preprocessing |
+| `scikit-image` | MSE / SSIM quality metrics |
+| `scipy` | Scientific utilities |
 
-![](assets/images/FRQI.png)
+> **Note:** `qiskit-aer` is now a **separate** package from `qiskit` (since Qiskit 1.0). Both must be installed.
 
-For comparision against classical methods, you can use the Sobel Edge Detection method which is located in the `sobel.py` file. Also, a utility function was created for fast comparision between images which can be found in `utils.py`.
+---
 
-## How to Contribute
-Contributions are welcome! Please open an issue or submit a pull request with your changes.
+## How It Works
 
-<!-- >
+```
+Input Image
+    │
+    ▼
+Pre-process  →  Resize to 2ⁿ × 2ⁿ, convert to grayscale
+    │
+    ▼
+Encode (QPIE / FRQI)  →  Build quantum circuit with amplitude / angle encoding
+    │
+    ▼
+QHED  →  Apply Hadamard + Unitary shift operator to extract edges
+    │
+    ▼
+Measure statevector  →  Decode into edge image
+    │
+    ▼
+Visualize  →  Original | H-edges | V-edges | Combined edges
+```
+
+---
+
+## Output
+
+When you run the project you will see:
+
+- **QPIE Circuit Diagram** – the full quantum circuit for probability image encoding
+- **QPIE Edge Detection Plot** – original image vs. horizontal, vertical, and combined edges
+- **FRQI Circuit Diagram** – the full quantum circuit for angle-based encoding
+- **FRQI Edge Detection Plot** – same four-panel comparison
+- **Comparison Summary** – `showdiff()` side-by-side original vs. both edge results
+
+---
+
+## Running the Notebook
+
+For a step-by-step interactive exploration, open the Jupyter Notebook:
+
+```bash
+jupyter notebook Quantum_Edge_Detection.ipynb
+```
+
+---
+
+## Tutorial
+
+See **[TUTORIAL.md](TUTORIAL.md)** for a detailed walkthrough of:
+- Installation on Windows, macOS, and Linux
+- Running on a fresh device with one command
+- Understanding the output plots
+- Customizing the input image
+- Troubleshooting common errors
+
+---
+
+## Authors
+
+- **MohammadYehya** — original project author
+- **AJAX-ed** — bug fixes, modernisation, run.py launcher
+
+---
 
 ## License
-Distributed under the AGPLv3 License. See LICENSE for more information.hi
-test
-< -->
 
-## Credits
-### Collaborators
-
-<a href="https://github.com/mohammadyehya/Quantum_Edge_Detection/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=mohammadyehya/Quantum_Edge_Detection" />
-</a>
-
-### References
-
-[EDGE DETECTION QUANTUMIZED: A NOVEL QUANTUM ALGORITHM FOR IMAGE PROCESSING](https://arxiv.org/pdf/2404.06889)
-
-[Quantum Image Processing](https://arxiv.org/pdf/2203.01831)
-
-[Quantum Image Processing and Its Application to Edge Detection: Theory and Experiment](https://arxiv.org/pdf/1801.01465)
-
-[Quantum Image Processing: Quantum Probability Image Encoding (QPIE) and Quantum Hadamard Edge Detection](https://medium.com/mit-6-s089-intro-to-quantum-computing/quantum-image-processing-quantum-probability-image-encoding-qpie-and-quantum-hadamard-edge-df7bd3dc7f8)
+This project is for academic purposes (CS4084 Quantum Computing coursework).
